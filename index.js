@@ -5,6 +5,9 @@ const cors = require('cors')
 
 app.use(cors())
 
+//built-in middleware to show static content
+app.use(express.static('build'))
+
 //json parser middleware
 app.use(express.json())
 
