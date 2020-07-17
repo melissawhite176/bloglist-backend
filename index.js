@@ -15,29 +15,6 @@ app.use(express.json())
 
 //------------------------------------------------------
 
-let blogs = [
-  {
-    id: 1,
-    title: "Delicious Desserts Blog",
-    author: "Joanna Goodman",
-    url: "https://www.google.com",
-    likes: 4
-  },
-  {
-    id: 2,
-    title: "Tasty Treats Blog",
-    author: "Norton Oswald",
-    url: "https://www.wikipedia.com",
-    likes: 6
-  },
-  {
-    id: 3,
-    title: "DIY Furniture Blog",
-    author: "Virginia Woolf",
-    url: "https://www.fullstackopen.com",
-    likes: 10
-  }
-]
 //----------FETCH ALL BLOGS---------------
 
 app.get('/api/blogs', (request, response) => {

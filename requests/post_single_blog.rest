@@ -2,8 +2,8 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title": "Connie's Cameras Blog",
-  "author": "Connie",
-  "url": "https://www.etsy.com",
-  "likes": 20
+  "title": "DIY Furniture Blog",
+  "author": "Virginia Woolf",
+  "url": "https://www.fullstackopen.com",
+  "likes": 10
 }
