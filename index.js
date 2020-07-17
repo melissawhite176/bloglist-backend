@@ -31,8 +31,17 @@ app.get('/', (request, response) => {
 //-------FETCH INDIVIDUAL BLOG----------
 
 app.get('/api/blogs/:id', (request, response) => {
-  Blog.findById(request.params.id).then(blog => {
-    response.json(blog)
+  Blog.findById(request.params.id)
+  .then(blog => {
+    if(blog) {
+      response.json(blog)
+    } else {
+      response.status(404).end()
+    }
+  })
+  .catch(error => {
+    console.log(error)
+    response.status(500).end()
   })
 })
 
