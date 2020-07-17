@@ -2,8 +2,8 @@ POST http://localhost:3001/api/blogs
 Content-Type: application/json
 
 {
-  "title": "DIY Furniture Blog",
-  "author": "Virginia Woolf",
-  "url": "https://www.fullstackopen.com",
+  "title": "Book of the Week Blog",
+  "author": "Maggie Nelson",
+  "url": "https://www.maggiesbooksblog123.com",
   "likes": 10
 }
