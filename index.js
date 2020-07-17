@@ -41,7 +41,7 @@ app.get('/api/blogs/:id', (request, response) => {
   })
   .catch(error => {
     console.log(error)
-    response.status(500).end()
+    response.status(400).send({ error: 'malformatted id' })
   })
 })
 
