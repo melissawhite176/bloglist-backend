@@ -59,14 +59,16 @@ app.get('/api/blogs/:id', (request, response) => {
   })
 })
 
-//----------------------------------------
+//--------DELETE INDIVIDUAL BLOG----------
 
-app.delete('/api/blogs/:id', (request, response) => {
-  const id = Number(request.params.id)
-  blogs = blogs.filter(blog => blog.id !== id)
-
-  response.status(204).end()
+app.delete('/api/blogs/:id', (request, response, next) => {
+  Blog.findByIdAndRemove(request.params.id)
+    .then(() => {
+      response.status(204).end()
+  })
+  .catch(error => next(error))
 })
+
 
 //------CREATE NEW BLOG-----------
 app.post('/api/blogs', (request, response) => {
