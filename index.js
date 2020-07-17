@@ -51,6 +51,8 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
 })
 
+//-------FETCH INDIVIDUAL NOTE----------
+
 app.get('/api/blogs/:id', (request, response) => {
   const id = Number(request.params.id)
   const blog = blogs.find(blog => {
@@ -63,6 +65,8 @@ app.get('/api/blogs/:id', (request, response) => {
   }
 })
 
+//----------------------------------------
+
 app.delete('/api/blogs/:id', (request, response) => {
   const id = Number(request.params.id)
   blogs = blogs.filter(blog => blog.id !== id)
@@ -70,13 +74,7 @@ app.delete('/api/blogs/:id', (request, response) => {
   response.status(204).end()
 })
 
-const generateId = () => {
-  const maxId = blogs.length > 0
-    ? Math.max(...blogs.map(n => n.id))
-    : 0
-  return maxId + 1
-}
-
+//------CREATE NEW BLOG-----------
 app.post('/api/blogs', (request, response) => {
   const body = request.body
 
@@ -85,20 +83,23 @@ app.post('/api/blogs', (request, response) => {
       error: 'title, author, url, or number of likes missing'
     })
   }
-
-  const blog = {
+  //blog constructor function to create blog object
+  //properties match the Blog schema in model/blog.js
+  const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
-    id: generateId(),
-  }
+    likes: body.likes
+  })
 
   console.log('blog:', blog)
 
-  blogs = blogs.concat(blog)
-
-  response.json(blog)
+  
+  blog.save().then(savedBlog => {
+    response.json(savedBlog)
+  })
 })
+//------------------------------------
 
 //environment variable PORT or port 3001 
 //if environment variable is undefined
