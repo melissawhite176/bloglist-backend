@@ -15,13 +15,6 @@ app.use(express.json())
 
 //------------------------------------------------------
 
-app.get('/api/blogs', (request, response) => {
-  Blog.find({}).then(blogs => {
-    response.json(blogs)
-  })
-})
-//-------------------------------------------------------
-
 let blogs = [
   {
     id: 1,
@@ -45,13 +38,20 @@ let blogs = [
     likes: 10
   }
 ]
-//---------------------------------------------------------
+//----------FETCH ALL BLOGS---------------
+
+app.get('/api/blogs', (request, response) => {
+  Blog.find({}).then(blogs => {
+    response.json(blogs)
+  })
+})
+//------------------------------------------
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello World!</h1>')
 })
 
-//-------FETCH INDIVIDUAL NOTE----------
+//-------FETCH INDIVIDUAL BLOG----------
 
 app.get('/api/blogs/:id', (request, response) => {
   const id = Number(request.params.id)
