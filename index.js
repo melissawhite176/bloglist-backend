@@ -82,7 +82,22 @@ app.post('/api/blogs', (request, response) => {
     response.json(savedBlog)
   })
 })
-//------------------------------------
+//-----------ERROR HANDLER--------------
+//check if the error is a CastError exception (ex: invalid object id for Mongo)
+//in all other error situations, the middleware will pass the error forward 
+//to the default Express error handler 
+const errorHandler = (error, request, response, next) => {
+  console.log(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id '})
+  }
+
+  next(error)
+}
+
+app.use(errorHandler)
+//-------------------------------------
 
 //environment variable PORT or port 3001 
 //if environment variable is undefined
