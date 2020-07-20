@@ -12,11 +12,26 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     console.log('error connecting to MongoDB', error.message)
   })
 
+//blog schema with validation middleware
 const blogSchema = new mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number
+  title: {
+    type: String,
+    minlength: 5,
+    required: true
+  },
+  author: {
+    type: String,
+    minlength: 2,
+    required: true
+  },
+  url: {
+    type: String,
+    required: true
+  },
+  likes: {
+    type: Number,
+    required: true
+  }
 })
 
 //formats id property object to string, 
