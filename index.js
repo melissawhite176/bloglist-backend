@@ -30,7 +30,7 @@ app.get('/', (request, response) => {
 
 //-------FETCH INDIVIDUAL BLOG----------
 
-app.get('/api/blogs/:id', (request, response) => {
+app.get('/api/blogs/:id', (request, response, next) => {
   Blog.findById(request.params.id)
   .then(blog => {
     if(blog) {
@@ -41,6 +41,7 @@ app.get('/api/blogs/:id', (request, response) => {
   })
   .catch(error => {
     console.log(error)
+    console.log('error.name:', error.name)
     response.status(400).send({ error: 'malformatted id' })
   })
 })
