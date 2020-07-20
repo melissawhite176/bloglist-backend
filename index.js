@@ -5,13 +5,14 @@ const app = express()
 const cors = require('cors')
 const Blog = require('./models/blog')
 
-app.use(cors())
-
 //built-in middleware to show static content
 app.use(express.static('build'))
 
 //json parser middleware
 app.use(express.json())
+
+//cross-origin resource sharing
+app.use(cors())
 
 //------------------------------------------------------
 
@@ -82,6 +83,34 @@ app.post('/api/blogs', (request, response) => {
     response.json(savedBlog)
   })
 })
+
+//-------------------------------------
+//environment variable PORT or port 3001 
+//if environment variable is undefined
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})
+
+//-------------------------------------
+//middleware that prints information about every request 
+//that is sent to the server (middleware receives these three parameters)
+const requestLogger = (request, response, next) => {
+  console.log('Method:', request.method)
+  console.log('Path: ', request.path)
+  console.log('Body: ', request.body)
+  console.log('---')
+  next()
+}
+app.use(requestLogger)
+
+//-------------------------------------
+//middleware used for catching requests made to non-existent routes
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
+
 //-----------ERROR HANDLER--------------
 //check if the error is a CastError exception (ex: invalid object id for Mongo)
 //in all other error situations, the middleware will pass the error forward 
@@ -98,27 +127,3 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 //-------------------------------------
-
-//environment variable PORT or port 3001 
-//if environment variable is undefined
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
-})
-
-//middleware that prints information about every request 
-//that is sent to the server (middleware receives these three parameters)
-const requestLogger = (request, response, next) => {
-  console.log('Method:', request.method)
-  console.log('Path: ', request.path)
-  console.log('Body: ', request.body)
-  console.log('---')
-  next()
-}
-app.use(requestLogger)
-
-//middleware used for catching requests made to non-existent routes
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
-}
-app.use(unknownEndpoint)
