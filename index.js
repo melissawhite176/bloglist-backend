@@ -33,18 +33,18 @@ app.get('/', (request, response) => {
 
 app.get('/api/blogs/:id', (request, response, next) => {
   Blog.findById(request.params.id)
-  .then(blog => {
-    if(blog) {
-      response.json(blog)
-    } else {
-      response.status(404).end()
-    }
-  })
-  .catch(error => {
-    console.log(error)
-    console.log('error.name:', error.name)
-    response.status(400).send({ error: 'malformatted id' })
-  })
+    .then(blog => {
+      if (blog) {
+        response.json(blog)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      console.log('error.name:', error.name)
+      response.status(400).send({ error: 'malformatted id' })
+    })
 })
 
 //--------DELETE INDIVIDUAL BLOG----------
@@ -53,20 +53,15 @@ app.delete('/api/blogs/:id', (request, response, next) => {
   Blog.findByIdAndRemove(request.params.id)
     .then(() => {
       response.status(204).end()
-  })
-  .catch(error => next(error))
+    })
+    .catch(error => next(error))
 })
 
 
 //------CREATE NEW BLOG-----------
-app.post('/api/blogs', (request, response) => {
+app.post('/api/blogs', (request, response, next) => {
   const body = request.body
 
-  if (!body.title || !body.author || !body.url || !body.likes) {
-    return response.status(400).json({
-      error: 'title, author, url, or number of likes missing'
-    })
-  }
   //blog constructor function to create blog object
   //properties match the Blog schema in model/blog.js
   const blog = new Blog({
@@ -78,11 +73,14 @@ app.post('/api/blogs', (request, response) => {
 
   console.log('blog:', blog)
 
-  
-  blog.save().then(savedBlog => {
-    response.json(savedBlog)
-  })
+
+  blog.save()
+    .then(savedBlog => {
+      response.json(savedBlog)
+    })
+    .catch(error => next(error))
 })
+
 
 //-------------------------------------
 //environment variable PORT or port 3001 
@@ -119,7 +117,7 @@ const errorHandler = (error, request, response, next) => {
   console.log(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id '})
+    return response.status(400).send({ error: 'malformatted id ' })
   }
 
   next(error)
