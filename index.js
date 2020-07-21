@@ -74,9 +74,11 @@ app.post('/api/blogs', (request, response, next) => {
   console.log('blog:', blog)
 
 
-  blog.save()
-    .then(savedBlog => {
-      response.json(savedBlog)
+  blog
+    .save()
+    .then(savedBlog => savedBlog.toJSON())
+    .then(savedAndFormattedBlog => {
+      response.json(savedAndFormattedBlog)
     })
     .catch(error => next(error))
 })
