@@ -5,7 +5,7 @@ const url = process.env.MONGODB_URI
 console.log('connecting to', url)
 
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB')
   })
   .catch((error) => {
@@ -34,7 +34,7 @@ const blogSchema = new mongoose.Schema({
   }
 })
 
-//formats id property object to string, 
+//formats id property object to string,
 //and removes versioning field
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {

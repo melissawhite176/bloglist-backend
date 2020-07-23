@@ -38,7 +38,7 @@
 //   mongoose.connection.close()
 // })
 
-//PRINTS BLOGS STORED IN DATABASE 
+//PRINTS BLOGS STORED IN DATABASE
 //----------------------------
 
 // Blog.find({ author: 'Marie' }).then(result => {

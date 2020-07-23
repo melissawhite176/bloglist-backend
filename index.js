@@ -80,16 +80,15 @@ app.post('/api/blogs', (request, response, next) => {
 
 
 //-------------------------------------
-//environment variable PORT or port 3001 
-//if environment variable is undefined
+//environment variable PORT or port 3001 if environment variable is undefined
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
 
 //-------------------------------------
-//middleware that prints information about every request 
-//that is sent to the server (middleware receives these three parameters)
+//middleware that prints information about every request that is
+//sent to the server (middleware receives these three parameters)
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
   console.log('Path: ', request.path)
@@ -108,24 +107,18 @@ app.use(unknownEndpoint)
 
 //-----------ERROR HANDLER--------------
 //check if the error is a CastError exception (ex: invalid object id for Mongo)
-//in all other error situations, the middleware will pass the error forward 
-//to the default Express error handler 
+//in all other error situations,
+//the middleware will pass the error forward to the default Express error handler
 const errorHandler = (error, request, response, next) => {
   console.log('error.name:', error.name)
   console.log('error message:', error.message)
 
   if (error.name === 'CastError') {
     return response.status(400)
-      .json({ 
-        errorname: error.name,
-        error: 'malformatted id'
-      })
+      .json({ errorname: error.name, error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
     return response.status(400)
-      .json({ 
-        errorname: error.name,
-        error: error.message 
-      })
+      .json({ errorname: error.name, error: error.message })
   }
 
   next(error)
