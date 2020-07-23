@@ -1,6 +1,5 @@
 require('dotenv').config()
 const express = require('express')
-const { request, response } = require('express')
 const app = express()
 const cors = require('cors')
 const Blog = require('./models/blog')
@@ -40,11 +39,7 @@ app.get('/api/blogs/:id', (request, response, next) => {
         response.status(404).end()
       }
     })
-    .catch(error => {
-      console.log(error)
-      console.log('error.name:', error.name)
-      response.status(400).send({ error: 'malformatted id' })
-    })
+    .catch(error => next(error))
 })
 
 //--------DELETE INDIVIDUAL BLOG----------
@@ -116,12 +111,21 @@ app.use(unknownEndpoint)
 //in all other error situations, the middleware will pass the error forward 
 //to the default Express error handler 
 const errorHandler = (error, request, response, next) => {
-  console.log(error.message)
+  console.log('error.name:', error.name)
+  console.log('error message:', error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id ' })
+    return response.status(400)
+      .json({ 
+        errorname: error.name,
+        error: 'malformatted id'
+      })
   } else if (error.name === 'ValidationError') {
-    return response.status(400).json({ error: error.message})
+    return response.status(400)
+      .json({ 
+        errorname: error.name,
+        error: error.message 
+      })
   }
 
   next(error)
