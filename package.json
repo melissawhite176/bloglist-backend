@@ -7,11 +7,11 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "lint": "eslint .",
-    "test": "\"echo \\\"Error: no test specified\\\" && exit 1\"",
     "build:ui": "rm -rf build && cd ../fullstack2020/part4/bloglist && npm run build --prod && cp -r build ../../../bloglist-backend/",
     "deploy": "git push heroku master",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "test": "jest --verbose"
   },
   "author": "Melissa",
   "license": "ISC",
@@ -24,6 +24,7 @@
   "devDependencies": {
     "eslint": "^7.5.0",
     "eslint-plugin-react": "^7.20.3",
+    "jest": "^26.1.0",
     "nodemon": "^2.0.4"
   }
 }
