@@ -1,4 +1,4 @@
-//CONTROLLERS/BLOG.JS -> all of the routes related to blogs in this directory
+//CONTROLLERS/BLOGS.JS -> all of the routes related to blogs in this directory
 
 /*A router object is an isolated instance of middleware and routes.
 You can think of it as a “mini-application,” capable only of performing middleware and routing functions.

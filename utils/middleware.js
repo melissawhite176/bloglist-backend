@@ -1,4 +1,6 @@
 //custom middleware
+
+//logger for printing to console
 const logger = require('./logger')
 
 //----------REQUEST LOGGER-----------
