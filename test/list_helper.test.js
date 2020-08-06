@@ -187,3 +187,56 @@ describe('most blogs', () => {
     })
   })
 })
+
+
+
+
+
+
+
+describe('most likes', () => {
+
+  const listWithDifferentAuthors = [
+    {
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful',
+      author: 'Robert C. Martin',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 50,
+      __v: 0
+    },
+    {
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 550,
+      __v: 0
+    },
+    {
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful',
+      author: 'John Steinbeck',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 600,
+      __v: 0
+    },
+    {
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful',
+      author: 'Robert C. Martin',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 100,
+      __v: 0
+    }
+  ]
+
+  test('different authors', () => {
+    const result = listHelper.mostLikes(listWithDifferentAuthors)
+    expect(result).toEqual({
+      author: 'John Steinbeck',
+      likes: 600
+    })
+  })
+})
+

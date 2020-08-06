@@ -44,7 +44,36 @@ const mostBlogs = blogList => {
       }
     }
   })
-  console.log(max)
+  console.log('mostBlogs', max)
+  return max
+}
+
+
+//The Map object holds key-value pairs and remembers the original insertion order of the keys. 
+//Any value (both objects and primitive values) may be used as either a key or a value.
+//key -> author, value -> likesCount
+//return value is the "max" object which shows the author with most number of likes
+const mostLikes = blogList => {
+  const map = new Map()
+  blogList.forEach(blog => {
+    const likesCount = map.get(blog.author) || 0
+    map.set(blog.author, likesCount + blog.likes)
+  })
+
+  let max = {
+    author: undefined,
+    likes: 0
+  }
+
+  map.forEach((likes, author) => {
+    if(likes > max.likes) {
+      max = {
+        author,
+        likes
+      }
+    }
+  })
+  console.log('mostLikes:', max)
   return max
 }
 
@@ -54,5 +83,6 @@ module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
