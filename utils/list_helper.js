@@ -19,8 +19,40 @@ const favoriteBlog = blogList => {
     .reduce((max, blog) => blog.likes > max.likes ? blog : max)
 }
 
+
+//The Map object holds key-value pairs and remembers the original insertion order of the keys. 
+//Any value (both objects and primitive values) may be used as either a key or a value.
+//key -> author, value -> blogCount
+//return value is the "max" object which shows the author with most number of blogs
+const mostBlogs = blogList => {
+  const map = new Map()
+  blogList.forEach(blog => {
+    const blogCount = map.get(blog.author) || 0
+    map.set(blog.author, blogCount + 1)
+  })
+
+  let max = {
+    author: undefined,
+    blogs: 0
+  }
+
+  map.forEach((blogs, author) => {
+    if(blogs > max.blogs) {
+      max = {
+        author,
+        blogs
+      }
+    }
+  })
+  console.log(max)
+  return max
+}
+
+
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }
