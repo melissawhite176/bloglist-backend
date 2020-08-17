@@ -17,10 +17,9 @@ const Blog = require('../models/blog')
 /*path in the route handler has shortened to ('/')
 the router middleware was used to define "related routes"
 defined in app.js -> app.use('/api/blogs', blogsRouter)*/
-blogsRouter.get('/', (request, response) => {
-  Blog.find({}).then(blogs => {
-    response.json(blogs)
-  })
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({})
+  response.json(blogs)
 })
 
 //-------FETCH INDIVIDUAL BLOG----------
