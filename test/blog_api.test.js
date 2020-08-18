@@ -2,43 +2,25 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
-const Blog = require('../models/blog')
+const helper = require('./test_helper')
 
-const initialBlogs = [
-  {
-    title: 'Mary\'s Makeup Blog',
-    author: 'Mary',
-    url: 'https://www.fullstackopen.com/en',
-    likes: 100,
-  },
-  {
-    title: 'Gary Gardening Blog',
-    author: 'Gary',
-    url: 'https://www.developer.mozilla.org/en-US/',
-    likes: 101,
-  },
-]
+const Blog = require('../models/blog')
 
 beforeEach(async () => {
   await Blog.deleteMany({})
 
-  let blogObject = new Blog(initialBlogs[0])
-  await blogObject.save()
+  let blogObjects = helper.initialBlogs
+    .map(blog => new Blog(blog))
 
-  blogObject = new Blog(initialBlogs[1])
-  await blogObject.save()
+  const promiseArray = blogObjects.map(blog => blog.save())
+  await Promise.all(promiseArray)
 })
-
-const blogsInDb = async () => {
-  const blogs = await Blog.find({})
-  return blogs.map(blog => blog.toJSON())
-}
 
 
 test('correct number of blogs are returned', async () => {
   const response = await api.get('/api/blogs')
 
-  expect(response.body).toHaveLength(initialBlogs.length)
+  expect(response.body).toHaveLength(helper.initialBlogs.length)
 })
 
 test('verify that the unique identifier property of the blog posts is named id', async () => {
@@ -62,13 +44,35 @@ test('a valid blog can be added', async () => {
     .expect(200)
     .expect('Content-Type', /application\/json/)
 
-  const blogsAtEnd = await blogsInDb()
-  expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
 
   const titles = blogsAtEnd.map(r => r.title)
   expect(titles).toContain(
     'Carla\'s Computer Blog'
   )
+})
+
+test('a blog without likes defaults to zero likes', async () => {
+  const newBlog = {
+    title: 'Gabe\'s Tech Gadgets Blog',
+    author: 'Gabe',
+    url: 'https://www.developer.mozilla.org/en-US/',
+  }
+
+  const FIXED_ID = 'fixed-id'
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(res => {
+      res.body.id = FIXED_ID
+    })
+    .expect(200, {
+      id: FIXED_ID,
+      likes: 0,
+      ...newBlog
+    })
 })
 
 afterAll(() => {
