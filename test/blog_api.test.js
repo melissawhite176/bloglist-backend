@@ -29,6 +29,11 @@ beforeEach(async () => {
   await blogObject.save()
 })
 
+const blogsInDb = async () => {
+  const blogs = await Blog.find({})
+  return blogs.map(blog => blog.toJSON())
+}
+
 
 test('correct number of blogs are returned', async () => {
   const response = await api.get('/api/blogs')
@@ -43,6 +48,28 @@ test('verify that the unique identifier property of the blog posts is named id',
   expect(response.body[1].id).toBeDefined()
 })
 
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'Carla\'s Computer Blog',
+    author: 'Carla',
+    url: 'https://www.developer.mozilla.org/en-US/',
+    likes: 200,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await blogsInDb()
+  expect(blogsAtEnd).toHaveLength(initialBlogs.length + 1)
+
+  const titles = blogsAtEnd.map(r => r.title)
+  expect(titles).toContain(
+    'Carla\'s Computer Blog'
+  )
+})
 
 afterAll(() => {
   mongoose.connection.close()
