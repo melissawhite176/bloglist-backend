@@ -95,9 +95,6 @@ test('a single blog can be deleted', async () => {
   const blogsAtStart = await helper.blogsInDb()
   const blogToDelete = blogsAtStart[0]
 
-  console.log('blogsAtStart:', blogsAtStart)
-  console.log('blogToDelete:', blogToDelete)
-
   await api
     .delete(`/api/blogs/${blogToDelete.id}`)
     .expect(204)
@@ -108,6 +105,31 @@ test('a single blog can be deleted', async () => {
   const titles = blogsAtEnd.map(r => r.title)
   expect(titles).not.toContain(blogToDelete.title)
 })
+
+test('a single blog can be updated', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToUpdate = blogsAtStart[0]
+
+  const update = {
+    title: 'Mary\'s Magic Makeup Blog',
+    author: 'Mary',
+    url: 'https://www.fullstackopen.com/en',
+    likes: 212
+  }
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(update)
+    .expect(200)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+
+  const titles = blogsAtEnd.map(r => r.title)
+  expect(titles).toContain(update.title)
+})
+
+
 
 afterAll(() => {
   mongoose.connection.close()
