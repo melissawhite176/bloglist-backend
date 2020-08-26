@@ -26,21 +26,18 @@ blogsRouter.get('/', async (request, response) => {
 /*path in the route handler has shortened to ('/:id')
 /the router middleware was used to define "related routes"
 /defined in app.js -> app.use('/api/blogs', blogsRouter)*/
-blogsRouter.get('/:id', (request, response, next) => {
-  Blog.findById(request.params.id)
-    .then(blog => {
-      if (blog) {
-        response.json(blog)
-      } else {
-        response.status(404).end()
-      }
-    })
-    .catch(error => next(error))
+blogsRouter.get('/:id', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  if (blog) {
+    response.json(blog)
+  } else {
+    response.status(404).end()
+  }
 })
 
 
 //------CREATE NEW BLOG-----------
-blogsRouter.post('/', (request, response, next) => {
+blogsRouter.post('/', async (request, response) => {
   const body = request.body
 
   /*blog constructor function to create blog object
@@ -54,26 +51,17 @@ blogsRouter.post('/', (request, response, next) => {
 
   console.log('blog:', blog)
 
-
-  blog
-    .save()
-    .then(savedBlog => savedBlog.toJSON())
-    .then(savedAndFormattedBlog => {
-      response.json(savedAndFormattedBlog)
-    })
-    .catch(error => next(error))
+  const savedBlog = await blog.save()
+  response.json(savedBlog)
 })
 
 //--------DELETE INDIVIDUAL BLOG----------
 /*path in the route handler has shortened to ('/:id')
 /the router middleware was used to define "related routes"
 /defined in app.js -> app.use('/api/blogs', blogsRouter)*/
-blogsRouter.delete('/:id', (request, response, next) => {
-  Blog.findByIdAndRemove(request.params.id)
-    .then(() => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
+blogsRouter.delete('/:id', async (request, response) => {
+  await Blog.findByIdAndRemove(request.params.id)
+  response.status(204).end()
 })
 
 module.exports = blogsRouter
